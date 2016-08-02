@@ -16,6 +16,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Import({ConfigServerEncryptionConfiguration.class, ConfigServerMvcConfiguration.class,
-        CloudConfigServerRedis.class, ResourceRepositoryConfiguration.class})
+        CloudConfigServerRedisConfiguration.class, ResourceRepositoryConfiguration.class})
 public @interface EnableConfigServerRedis {
 }

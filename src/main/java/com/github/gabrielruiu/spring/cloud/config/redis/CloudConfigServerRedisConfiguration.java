@@ -15,7 +15,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
  */
 @Configuration
 @EnableConfigurationProperties(ConfigServerProperties.class)
-public class CloudConfigServerRedis {
+public class CloudConfigServerRedisConfiguration {
 
     @Autowired
     private ConfigServerProperties configServerProperties;
