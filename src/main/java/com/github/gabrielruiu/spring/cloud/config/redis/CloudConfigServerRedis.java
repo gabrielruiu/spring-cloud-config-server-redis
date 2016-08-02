@@ -1,30 +1,35 @@
 package com.github.gabrielruiu.spring.cloud.config.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.config.server.config.ConfigServerProperties;
-import org.springframework.cloud.config.server.environment.EnvironmentRepository;
+import org.springframework.cloud.config.server.environment.NativeEnvironmentRepository;
 import org.springframework.cloud.config.server.environment.SearchPathLocator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 /**
  * @author Gabriel Mihai Ruiu (gabriel.ruiu@mail.com)
  */
-@ConditionalOnClass(StringRedisTemplate.class)
-@ConditionalOnMissingBean(EnvironmentRepository.class)
-@ConditionalOnProperty(value = "spring.cloud.config.server.redis.enabled", havingValue = "true")
 @Configuration
-public class CloudConfigServerRedisAutoConfiguration {
+@EnableConfigurationProperties(ConfigServerProperties.class)
+public class CloudConfigServerRedis {
 
     @Autowired
     private ConfigServerProperties configServerProperties;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private ConfigurableEnvironment environment;
+
+    @Bean
+    public SearchPathLocator searchPathLocator() {
+        return new NativeEnvironmentRepository(environment);
+    }
 
     @Bean
     public RedisEnvironmentRepository redisEnvironmentRepository() {
@@ -44,11 +49,5 @@ public class CloudConfigServerRedisAutoConfiguration {
     @Bean
     public RedisConfigKeysUtilities redisConfigKeysUtilities() {
         return new RedisConfigKeysUtilities();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(SearchPathLocator.class)
-    public SearchPathLocator searchPathLocator() {
-        return new NoopSearchPathLocator();
     }
 }
