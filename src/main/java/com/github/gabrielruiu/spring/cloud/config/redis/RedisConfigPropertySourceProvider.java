@@ -4,14 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.config.environment.PropertySource;
 import org.springframework.cloud.config.server.config.ConfigServerProperties;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 /**
  * @author Gabriel Mihai Ruiu (gabriel.ruiu@mail.com)
  */
-@Component
 public class RedisConfigPropertySourceProvider {
 
     private StringRedisTemplate stringRedisTemplate;

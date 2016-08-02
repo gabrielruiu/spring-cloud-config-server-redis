@@ -1,11 +1,8 @@
 package com.github.gabrielruiu.spring.cloud.config.redis;
 
-import org.springframework.stereotype.Component;
-
 /**
  * @author Gabriel Mihai Ruiu (gabriel.ruiu@mail.com)
  */
-@Component
 public class RedisConfigKeysUtilities {
 
     private static final String KEY_FORMAT = "%s:%s:%s:";

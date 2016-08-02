@@ -2,7 +2,6 @@ package com.github.gabrielruiu.spring.cloud.config.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.HashSet;
@@ -11,7 +10,6 @@ import java.util.Set;
 /**
  * @author Gabriel Mihai Ruiu (gabriel.ruiu@mail.com)
  */
-@Component
 public class RedisConfigKeysProvider {
 
     private StringRedisTemplate stringRedisTemplate;

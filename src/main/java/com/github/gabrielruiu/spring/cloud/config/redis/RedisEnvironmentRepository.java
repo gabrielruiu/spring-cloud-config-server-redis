@@ -5,14 +5,12 @@ import org.springframework.cloud.config.environment.Environment;
 import org.springframework.cloud.config.environment.PropertySource;
 import org.springframework.cloud.config.server.config.ConfigServerProperties;
 import org.springframework.cloud.config.server.environment.EnvironmentRepository;
-import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
 /**
  * @author Gabriel Mihai Ruiu (gabriel.ruiu@mail.com)
  */
-@Component
 public class RedisEnvironmentRepository implements EnvironmentRepository {
 
     private static final String DEFAULT_LABEL = "master";
