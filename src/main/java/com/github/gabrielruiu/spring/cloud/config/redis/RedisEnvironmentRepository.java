@@ -26,9 +26,9 @@ public class RedisEnvironmentRepository implements EnvironmentRepository {
 
     @Override
     public Environment findOne(String application, String inputProfileArray, String label) {
-        application = getDefaultApplication(application);
-        label = getDefaultLabel(label);
-        String profileArray = getDefaultProfilesArray(inputProfileArray);
+        application = fallbackToDefaultApplicationNameIfMissing(application);
+        label = fallbackToDefaultLabelIfMissing(label);
+        String profileArray = addDefaultProfileIfMissing(inputProfileArray);
 
         String[] profiles = profileArray.split(",");
         Environment environment = new Environment(application, inputProfileArray.split(","));
@@ -52,7 +52,7 @@ public class RedisEnvironmentRepository implements EnvironmentRepository {
         return environment;
     }
 
-    private String getDefaultLabel(String label) {
+    private String fallbackToDefaultLabelIfMissing(String label) {
         if (label == null) {
             if (configServerProperties.getDefaultLabel() != null) {
                 return configServerProperties.getDefaultLabel();
@@ -63,14 +63,14 @@ public class RedisEnvironmentRepository implements EnvironmentRepository {
         return label;
     }
 
-    private String getDefaultApplication(String application) {
+    private String fallbackToDefaultApplicationNameIfMissing(String application) {
         if (application == null) {
             return configServerProperties.getDefaultApplicationName();
         }
         return application;
     }
 
-    private String getDefaultProfilesArray(String profileArray) {
+    private String addDefaultProfileIfMissing(String profileArray) {
         if (profileArray == null) {
             return configServerProperties.getDefaultProfile();
         } else {
