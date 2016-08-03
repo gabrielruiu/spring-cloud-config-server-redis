@@ -22,10 +22,10 @@ public class RedisConfigKeysUtilitiesTest {
     }
 
     @Test
-    public void shouldExtractThePropertyNameFromTheRedisKey() {
-        String expectedPropertyName = "format:date";
+    public void shouldExtractThePropertyNameAndReplaceColonWithPeriod() {
+        String expectedPropertyName = "format.date";
 
-        String actualPropertyName = keysUtilities.extractPropertyNameNameFromKey("application", "default", "master",
+        String actualPropertyName = keysUtilities.formatKey("application", "default", "master",
                                                                             "application:default:master:format:date");
 
         assertThat(actualPropertyName, is(expectedPropertyName));

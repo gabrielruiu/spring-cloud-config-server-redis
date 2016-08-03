@@ -11,7 +11,8 @@ public class RedisConfigKeysUtilities {
         return String.format(KEY_FORMAT + "*", application, profile, label);
     }
 
-    public String extractPropertyNameNameFromKey(String application, String profile, String label, String key) {
-        return key.replace(String.format(KEY_FORMAT, application, profile, label), "");
+    public String formatKey(String application, String profile, String label, String key) {
+        String extractedPropertyName = key.replace(String.format(KEY_FORMAT, application, profile, label), "");
+        return extractedPropertyName.replace(":", ".");
     }
 }

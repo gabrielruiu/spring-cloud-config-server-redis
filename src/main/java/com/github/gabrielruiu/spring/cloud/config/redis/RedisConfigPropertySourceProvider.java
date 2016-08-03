@@ -41,8 +41,7 @@ public class RedisConfigPropertySourceProvider {
     }
 
     private String formatKey(String application, String profile, String label, String key) {
-        String extractedPropertyName = redisConfigKeysUtilities.extractPropertyNameNameFromKey(application, profile, label, key);
-        return extractedPropertyName.replace(":", ".");
+        return redisConfigKeysUtilities.formatKey(application, profile, label, key);
     }
 
     private String getPropertySourceName(String application, String profile) {
