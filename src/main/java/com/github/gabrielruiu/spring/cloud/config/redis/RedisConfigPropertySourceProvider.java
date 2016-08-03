@@ -32,8 +32,9 @@ public class RedisConfigPropertySourceProvider {
 
             Map<String, String> properties = new HashMap<>();
             for (int i=0; i<keys.size(); i++) {
-                properties.put(formatKey(application, profile, label, keys.get(i)),
-                               propertyValues.get(i));
+                String propertyName = formatKey(application, profile, label, keys.get(i));
+                String propertyValue = propertyValues.get(i);
+                properties.put(propertyName, propertyValue);
             }
             return new PropertySource(getPropertySourceName(application, profile), properties);
         }
