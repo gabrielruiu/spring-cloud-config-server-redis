@@ -9,6 +9,8 @@ import org.springframework.cloud.config.server.environment.EnvironmentRepository
 import java.util.Objects;
 
 /**
+ * {@link EnvironmentRepository} which retrieves properties from a Redis database.
+ *
  * @author Gabriel Mihai Ruiu (gabriel.ruiu@mail.com)
  */
 public class RedisEnvironmentRepository implements EnvironmentRepository {
