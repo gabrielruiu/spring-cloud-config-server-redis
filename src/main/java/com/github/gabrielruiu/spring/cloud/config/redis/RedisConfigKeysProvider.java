@@ -8,6 +8,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Takes care of retrieving the keys from Redis, that match the pattern generated
+ * by {@link RedisConfigKeysUtilities}
+ *
  * @author Gabriel Mihai Ruiu (gabriel.ruiu@mail.com)
  */
 public class RedisConfigKeysProvider {
