@@ -9,25 +9,25 @@ import java.util.Set;
 
 /**
  * Takes care of retrieving the keys from Redis, that match the pattern generated
- * by {@link RedisConfigKeysUtilities}
+ * by {@link RedisPropertyNamePatternProvider}
  *
  * @author Gabriel Mihai Ruiu (gabriel.ruiu@mail.com)
  */
 public class RedisConfigKeysProvider {
 
     private StringRedisTemplate stringRedisTemplate;
-    private RedisConfigKeysUtilities redisConfigKeysUtilities;
+    private RedisPropertyNamePatternProvider redisPropertyNamePatternProvider;
 
     @Autowired
-    public RedisConfigKeysProvider(StringRedisTemplate stringRedisTemplate, RedisConfigKeysUtilities redisConfigKeysUtilities) {
+    public RedisConfigKeysProvider(StringRedisTemplate stringRedisTemplate, RedisPropertyNamePatternProvider redisPropertyNamePatternProvider) {
         this.stringRedisTemplate = stringRedisTemplate;
-        this.redisConfigKeysUtilities = redisConfigKeysUtilities;
+        this.redisPropertyNamePatternProvider = redisPropertyNamePatternProvider;
     }
 
     public Set<String> getKeys(String application, String profiles, String label) {
         Set<String> applicationKeys = new HashSet<>();
         for (String profile : StringUtils.commaDelimitedListToSet(profiles)) {
-            applicationKeys.addAll(stringRedisTemplate.keys(redisConfigKeysUtilities.redisConfigKeyTemplate(application, profile, label)));
+            applicationKeys.addAll(stringRedisTemplate.keys(redisPropertyNamePatternProvider.generateKeyPattern(application, profile, label)));
         }
         return applicationKeys;
     }

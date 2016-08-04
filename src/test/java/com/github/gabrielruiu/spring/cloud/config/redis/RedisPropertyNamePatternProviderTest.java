@@ -8,15 +8,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * @author Gabriel Mihai Ruiu (gabriel.ruiu@mail.com)
  */
-public class RedisConfigKeysUtilitiesTest {
+public class RedisPropertyNamePatternProviderTest {
 
-    RedisConfigKeysUtilities keysUtilities = new RedisConfigKeysUtilities();
+    RedisPropertyNamePatternProvider keysUtilities = new RedisPropertyNamePatternProvider();
 
     @Test
     public void shouldReturnExpectedRedisKey() {
         String expectedKey = "application:default:master:*";
 
-        String actualKey = keysUtilities.redisConfigKeyTemplate("application", "default", "master");
+        String actualKey = keysUtilities.generateKeyPattern("application", "default", "master");
 
         assertThat(actualKey, is(expectedKey));
     }
@@ -25,7 +25,7 @@ public class RedisConfigKeysUtilitiesTest {
     public void shouldExtractThePropertyNameAndReplaceColonWithPeriod() {
         String expectedPropertyName = "format.date";
 
-        String actualPropertyName = keysUtilities.formatKey("application", "default", "master",
+        String actualPropertyName = keysUtilities.formatRedisKeyIntoPropertyName("application", "default", "master",
                                                                             "application:default:master:format:date");
 
         assertThat(actualPropertyName, is(expectedPropertyName));

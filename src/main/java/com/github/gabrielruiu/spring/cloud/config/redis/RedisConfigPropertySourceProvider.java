@@ -14,14 +14,14 @@ public class RedisConfigPropertySourceProvider {
 
     private StringRedisTemplate stringRedisTemplate;
     private RedisConfigKeysProvider redisConfigKeysProvider;
-    private RedisConfigKeysUtilities redisConfigKeysUtilities;
+    private RedisPropertyNamePatternProvider redisPropertyNamePatternProvider;
     private ConfigServerProperties configServerProperties;
 
     @Autowired
-    public RedisConfigPropertySourceProvider(StringRedisTemplate stringRedisTemplate, RedisConfigKeysProvider redisConfigKeysProvider, RedisConfigKeysUtilities redisConfigKeysUtilities, ConfigServerProperties configServerProperties) {
+    public RedisConfigPropertySourceProvider(StringRedisTemplate stringRedisTemplate, RedisConfigKeysProvider redisConfigKeysProvider, RedisPropertyNamePatternProvider redisPropertyNamePatternProvider, ConfigServerProperties configServerProperties) {
         this.stringRedisTemplate = stringRedisTemplate;
         this.redisConfigKeysProvider = redisConfigKeysProvider;
-        this.redisConfigKeysUtilities = redisConfigKeysUtilities;
+        this.redisPropertyNamePatternProvider = redisPropertyNamePatternProvider;
         this.configServerProperties = configServerProperties;
     }
 
@@ -42,7 +42,7 @@ public class RedisConfigPropertySourceProvider {
     }
 
     private String formatKey(String application, String profile, String label, String key) {
-        return redisConfigKeysUtilities.formatKey(application, profile, label, key);
+        return redisPropertyNamePatternProvider.formatRedisKeyIntoPropertyName(application, profile, label, key);
     }
 
     private String getPropertySourceName(String application, String profile) {

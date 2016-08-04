@@ -47,7 +47,7 @@ public class CloudConfigServerRedisConfiguration {
     }
 
     @Bean
-    public RedisConfigKeysUtilities redisConfigKeysUtilities() {
-        return new RedisConfigKeysUtilities();
+    public RedisPropertyNamePatternProvider redisConfigKeysUtilities() {
+        return new RedisPropertyNamePatternProvider();
     }
 }
