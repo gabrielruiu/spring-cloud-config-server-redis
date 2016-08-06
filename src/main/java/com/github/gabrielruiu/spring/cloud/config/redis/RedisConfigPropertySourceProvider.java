@@ -8,6 +8,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import java.util.*;
 
 /**
+ * Handles retrieving and formatting of Redis properties, based on the
+ * application name, profile and label
+ *
  * @author Gabriel Mihai Ruiu (gabriel.ruiu@mail.com)
  */
 public class RedisConfigPropertySourceProvider {
