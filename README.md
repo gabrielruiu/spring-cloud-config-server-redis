@@ -89,4 +89,5 @@ which would return the following response:
 
 * There is no support for versioned properties, and therefore, all responses returned by the Redis config server
 will contain a ```null``` version.
+* As can be seen in the example above, the property-sources are profile specific
 
