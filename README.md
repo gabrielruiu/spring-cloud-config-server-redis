@@ -27,6 +27,6 @@ public class CentralizedConfigServerApplication {
 
 ## Notes
 
-* There is no support for versioned properties, and therefor, all responses returned by the Redis config server
+* There is no support for versioned properties, and therefore, all responses returned by the Redis config server
 will contain a ```null``` version.
 
