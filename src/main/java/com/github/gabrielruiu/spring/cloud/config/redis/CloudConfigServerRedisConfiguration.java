@@ -3,7 +3,6 @@ package com.github.gabrielruiu.spring.cloud.config.redis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.config.server.config.ConfigServerProperties;
-import org.springframework.cloud.config.server.environment.NativeEnvironmentRepository;
 import org.springframework.cloud.config.server.environment.SearchPathLocator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,8 +26,14 @@ public class CloudConfigServerRedisConfiguration {
     private ConfigurableEnvironment environment;
 
     @Bean
+    //TODO: Replace with actual implementation
     public SearchPathLocator searchPathLocator() {
-        return new NativeEnvironmentRepository(environment);
+        return new SearchPathLocator() {
+            @Override
+            public Locations getLocations(String application, String profile, String label) {
+                return null;
+            }
+        };
     }
 
     @Bean
