@@ -29,15 +29,17 @@ public class RedisConfigPropertySourceProvider {
     }
 
     public PropertySource getPropertySource(String application, String profile, String label) {
-        List<String> keys = new ArrayList<>(redisConfigKeysProvider.getKeys(application, profile, label));
+        Set<String> keys = redisConfigKeysProvider.getKeys(application, profile, label);
         if (keys.size() > 0) {
             List<String> propertyValues = stringRedisTemplate.opsForValue().multiGet(keys);
 
             Map<String, String> properties = new HashMap<>();
-            for (int i=0; i<keys.size(); i++) {
-                String propertyName = formatKey(application, profile, label, keys.get(i));
+            int i = 0;
+            for (String key : keys) {
+                String propertyName = formatKey(application, profile, label, key);
                 String propertyValue = propertyValues.get(i);
                 properties.put(propertyName, propertyValue);
+                i++;
             }
             return new PropertySource(getPropertySourceName(application, profile), properties);
         }
