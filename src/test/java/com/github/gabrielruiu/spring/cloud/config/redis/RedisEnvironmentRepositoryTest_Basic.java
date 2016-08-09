@@ -3,17 +3,9 @@ package com.github.gabrielruiu.spring.cloud.config.redis;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.embedded.LocalServerPort;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.cloud.config.environment.Environment;
 import org.springframework.cloud.config.environment.PropertySource;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 import java.util.Set;
@@ -26,26 +18,21 @@ import static org.mockito.Mockito.mock;
 /**
  * @author Gabriel Mihai Ruiu (gabriel.ruiu@mail.com)
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class RedisEnvironmentRepositoryTest {
+public class RedisEnvironmentRepositoryTest_Basic extends BaseRedisEnvironmentRepositoryTest {
 
-    @LocalServerPort
-    int port;
-
-    @MockBean
-    StringRedisTemplate stringRedisTemplate;
-
-    @Autowired
-    TestRestTemplate testRestTemplate;
+    private static final String KEY_BASE = "application:default:master:";
+    private static final String KEY_PATTERN = KEY_BASE + "*";
+    private static final String PROPERTY1 = KEY_BASE + "url";
+    private static final String PROPERTY2 = KEY_BASE + "format:date";
+    private static final String PROPERTY1_VALUE = "http://localhost:8080/url";
+    private static final String PROPERTY2_VALUE = "dd/MM/yyyy";
 
     @Test
     public void shouldRetrieveEnvironment() {
-        String pattern = "application:default:master:*";
-        List<String> properties = Lists.newArrayList("http://localhost:8080/url", "dd/MM/yyyy");
-        Set<String> keys = Sets.newHashSet("application:default:master:url", "application:default:master:format:date");
+        List<String> properties = Lists.newArrayList(PROPERTY1_VALUE, PROPERTY2_VALUE);
+        Set<String> keys = Sets.newHashSet(PROPERTY1, PROPERTY2);
         ValueOperations<String, String> valueOps = mock(ValueOperations.class);
-        given(stringRedisTemplate.keys(pattern)).willReturn(keys);
+        given(stringRedisTemplate.keys(KEY_PATTERN)).willReturn(keys);
         given(stringRedisTemplate.opsForValue()).willReturn(valueOps);
         given(valueOps.multiGet(keys)).willReturn(properties);
         String url = String.format("http://localhost:%d/application/default/master", port);
@@ -62,7 +49,7 @@ public class RedisEnvironmentRepositoryTest {
         assertThat(propertySource, notNullValue());
         assertThat(propertySource.getName(), is("application"));
         assertThat(propertySource.getSource(), notNullValue());
-        assertThat(propertySource.getSource(), hasEntry("format.date", "dd/MM/yyyy"));
-        assertThat(propertySource.getSource(), hasEntry("url", "http://localhost:8080/url"));
+        assertThat(propertySource.getSource(), hasEntry("format.date", PROPERTY2_VALUE));
+        assertThat(propertySource.getSource(), hasEntry("url", PROPERTY1_VALUE));
     }
 }
