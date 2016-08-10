@@ -50,7 +50,7 @@ OK
 ```
 
 
-And we perform the following ```cURL```:
+And we perform the following ```cURL``` on a locally running server instance:
 ```
 curl -X GET "http://localhost:8080/my-app/h2-db"
 ```
