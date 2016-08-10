@@ -58,7 +58,7 @@ public class RedisEnvironmentRepositoryTest_PropertySources extends BaseRedisEnv
         Environment env = testRestTemplate.getForObject(url, Environment.class);
 
         assertThat(env, notNullValue());
-        assertThat(env.getProfiles(), arrayWithSize(4));
+        assertThat(env.getProfiles(), arrayWithSize(3));
         assertThat(env.getProfiles(), arrayContaining("dev", "mock-db", "mock-client"));
         assertThat(env.getPropertySources(), notNullValue());
         assertThat(env.getPropertySources(), hasSize(4));
