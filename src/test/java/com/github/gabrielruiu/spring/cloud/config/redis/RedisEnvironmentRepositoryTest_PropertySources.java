@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceMatcher.matchingPropertySource;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
@@ -25,13 +26,13 @@ public class RedisEnvironmentRepositoryTest_PropertySources extends BaseRedisEnv
     @Test
     public void shouldIncludeGlobalApplicationPropertiesIfPresent() {
         String profiles = "dev,mock-db,mock-client";
-        Set<String> devKeys = Sets.newHashSet("application:dev:master:db:url", "application:dev:master:format:date");
-        Set<String> mockDbKeys = Sets.newHashSet("application:mock-db:master:db:url", "application:mock-db:master:db:username", "application:mock-db:master:db:password");
+        Set<String> devKeys = Sets.newHashSet("application:dev:master:format:date", "application:dev:master:db:url");
+        Set<String> mockDbKeys = Sets.newHashSet("application:mock-db:master:db:password", "application:mock-db:master:db:username", "application:mock-db:master:db:url");
         Set<String> mockClientKeys = Sets.newHashSet("application:mock-client:master:server:url");
-        Set<String> globalApplicationKeys = Sets.newHashSet("application:default:master:formate:date");
+        Set<String> globalApplicationKeys = Sets.newHashSet("application:default:master:format:date");
 
-        List<String> devProperties = Lists.newArrayList("http://localhost:3306/my-db", "dd/MM/yyyy");
-        List<String> mockDbProperties = Lists.newArrayList("http://localhost:3306/my-mock-db", "my-user", "my-password");
+        List<String> devProperties = Lists.newArrayList( "dd/MM/yyyy", "http://localhost:3306/my-db");
+        List<String> mockDbProperties = Lists.newArrayList("my-password", "http://localhost:3306/my-mock-db", "my-user");
         List<String> mockClientProperties = Lists.newArrayList("http://localhost:8080/my-rest-service");
         List<String> globalApplicationProperties = Lists.newArrayList("yyyy/MM/dd");
 
@@ -61,21 +62,21 @@ public class RedisEnvironmentRepositoryTest_PropertySources extends BaseRedisEnv
         assertThat(env.getProfiles(), arrayContaining("dev", "mock-db", "mock-client"));
         assertThat(env.getPropertySources(), notNullValue());
         assertThat(env.getPropertySources(), hasSize(4));
-        assertThat(env.getPropertySources(), hasItem(devPropertySource()));
-        assertThat(env.getPropertySources(), hasItem(mockDbPropertySource()));
-        assertThat(env.getPropertySources(), hasItem(mockClientPropertySource()));
-        assertThat(env.getPropertySources(), hasItem(globalApplicationPropertySource()));
+        assertThat(env.getPropertySources(), hasItem(matchingPropertySource(devPropertySource())));
+        assertThat(env.getPropertySources(), hasItem(matchingPropertySource(mockDbPropertySource())));
+        assertThat(env.getPropertySources(), hasItem(matchingPropertySource(mockClientPropertySource())));
+        assertThat(env.getPropertySources(), hasItem(matchingPropertySource(globalApplicationPropertySource())));
     }
 
     @Test
     public void shouldReturnAPropertySourceForEachProfile() {
         String profiles = "dev,mock-db,mock-client";
-        Set<String> devKeys = Sets.newHashSet("application:dev:master:db:url", "application:dev:master:format:date");
-        Set<String> mockDbKeys = Sets.newHashSet("application:mock-db:master:db:url", "application:mock-db:master:db:username", "application:mock-db:master:db:password");
+        Set<String> devKeys = Sets.newHashSet("application:dev:master:format:date", "application:dev:master:db:url");
+        Set<String> mockDbKeys = Sets.newHashSet("application:mock-db:master:db:password", "application:mock-db:master:db:username", "application:mock-db:master:db:url");
         Set<String> mockClientKeys = Sets.newHashSet("application:mock-client:master:server:url");
 
-        List<String> devProperties = Lists.newArrayList("http://localhost:3306/my-db", "dd/MM/yyyy");
-        List<String> mockDbProperties = Lists.newArrayList("http://localhost:3306/my-mock-db", "my-user", "my-password");
+        List<String> devProperties = Lists.newArrayList( "dd/MM/yyyy", "http://localhost:3306/my-db");
+        List<String> mockDbProperties = Lists.newArrayList("my-password", "http://localhost:3306/my-mock-db", "my-user");
         List<String> mockClientProperties = Lists.newArrayList("http://localhost:8080/my-rest-service");
 
         String devKeyPattern = "application:dev:master:*";
@@ -101,9 +102,9 @@ public class RedisEnvironmentRepositoryTest_PropertySources extends BaseRedisEnv
         assertThat(env.getProfiles(), arrayContaining("dev", "mock-db", "mock-client"));
         assertThat(env.getPropertySources(), notNullValue());
         assertThat(env.getPropertySources(), hasSize(3));
-        assertThat(env.getPropertySources(), hasItem(devPropertySource()));
-        assertThat(env.getPropertySources(), hasItem(mockDbPropertySource()));
-        assertThat(env.getPropertySources(), hasItem(mockClientPropertySource()));
+        assertThat(env.getPropertySources(), hasItem(matchingPropertySource(devPropertySource())));
+        assertThat(env.getPropertySources(), hasItem(matchingPropertySource(mockDbPropertySource())));
+        assertThat(env.getPropertySources(), hasItem(matchingPropertySource(mockClientPropertySource())));
     }
 
     private PropertySource devPropertySource() {
