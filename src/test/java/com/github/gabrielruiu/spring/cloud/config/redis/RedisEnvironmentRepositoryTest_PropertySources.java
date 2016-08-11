@@ -1,22 +1,15 @@
 package com.github.gabrielruiu.spring.cloud.config.redis;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.junit.Test;
 import org.springframework.cloud.config.environment.Environment;
 import org.springframework.cloud.config.environment.PropertySource;
-import org.springframework.data.redis.core.ValueOperations;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceMatcher.matchingPropertySource;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 
 /**
  * @author Gabriel Mihai Ruiu (gabriel.ruiu@mail.com)
@@ -26,32 +19,9 @@ public class RedisEnvironmentRepositoryTest_PropertySources extends BaseRedisEnv
     @Test
     public void shouldIncludeGlobalApplicationPropertiesIfPresent() {
         String profiles = "dev,mock-db,mock-client";
-        Set<String> devKeys = Sets.newHashSet("application:dev:master:format:date", "application:dev:master:db:url");
-        Set<String> mockDbKeys = Sets.newHashSet("application:mock-db:master:db:password", "application:mock-db:master:db:username", "application:mock-db:master:db:url");
-        Set<String> mockClientKeys = Sets.newHashSet("application:mock-client:master:server:url");
-        Set<String> globalApplicationKeys = Sets.newHashSet("application:default:master:format:date");
-
-        List<String> devProperties = Lists.newArrayList( "dd/MM/yyyy", "http://localhost:3306/my-db");
-        List<String> mockDbProperties = Lists.newArrayList("my-password", "http://localhost:3306/my-mock-db", "my-user");
-        List<String> mockClientProperties = Lists.newArrayList("http://localhost:8080/my-rest-service");
-        List<String> globalApplicationProperties = Lists.newArrayList("yyyy/MM/dd");
-
-        String devKeyPattern = "application:dev:master:*";
-        String mockDbKeyPattern = "application:mock-db:master:*";
-        String mockClientKeyPattern = "application:mock-client:master:*";
-        String globalApplicationKeyPattern = "application:default:master:*";
-
-        given(stringRedisTemplate.keys(devKeyPattern)).willReturn(devKeys);
-        given(stringRedisTemplate.keys(mockDbKeyPattern)).willReturn(mockDbKeys);
-        given(stringRedisTemplate.keys(mockClientKeyPattern)).willReturn(mockClientKeys);
-        given(stringRedisTemplate.keys(globalApplicationKeyPattern)).willReturn(globalApplicationKeys);
-
-        ValueOperations<String, String> valueOps = mock(ValueOperations.class);
-        given(stringRedisTemplate.opsForValue()).willReturn(valueOps);
-        given(valueOps.multiGet(devKeys)).willReturn(devProperties);
-        given(valueOps.multiGet(mockDbKeys)).willReturn(mockDbProperties);
-        given(valueOps.multiGet(mockClientKeys)).willReturn(mockClientProperties);
-        given(valueOps.multiGet(globalApplicationKeys)).willReturn(globalApplicationProperties);
+        Map<String, String> properties = getBasicProperties();
+        properties.put("application:default:master:format:date", "yyyy/MM/dd");
+        injectPropertiesIntoRedis(properties);
 
         String url = String.format("http://localhost:%d/application/%s/master", port, profiles);
 
@@ -71,27 +41,7 @@ public class RedisEnvironmentRepositoryTest_PropertySources extends BaseRedisEnv
     @Test
     public void shouldReturnAPropertySourceForEachProfile() {
         String profiles = "dev,mock-db,mock-client";
-        Set<String> devKeys = Sets.newHashSet("application:dev:master:format:date", "application:dev:master:db:url");
-        Set<String> mockDbKeys = Sets.newHashSet("application:mock-db:master:db:password", "application:mock-db:master:db:username", "application:mock-db:master:db:url");
-        Set<String> mockClientKeys = Sets.newHashSet("application:mock-client:master:server:url");
-
-        List<String> devProperties = Lists.newArrayList( "dd/MM/yyyy", "http://localhost:3306/my-db");
-        List<String> mockDbProperties = Lists.newArrayList("my-password", "http://localhost:3306/my-mock-db", "my-user");
-        List<String> mockClientProperties = Lists.newArrayList("http://localhost:8080/my-rest-service");
-
-        String devKeyPattern = "application:dev:master:*";
-        String mockDbKeyPattern = "application:mock-db:master:*";
-        String mockClientKeyPattern = "application:mock-client:master:*";
-
-        given(stringRedisTemplate.keys(devKeyPattern)).willReturn(devKeys);
-        given(stringRedisTemplate.keys(mockDbKeyPattern)).willReturn(mockDbKeys);
-        given(stringRedisTemplate.keys(mockClientKeyPattern)).willReturn(mockClientKeys);
-
-        ValueOperations<String, String> valueOps = mock(ValueOperations.class);
-        given(stringRedisTemplate.opsForValue()).willReturn(valueOps);
-        given(valueOps.multiGet(devKeys)).willReturn(devProperties);
-        given(valueOps.multiGet(mockDbKeys)).willReturn(mockDbProperties);
-        given(valueOps.multiGet(mockClientKeys)).willReturn(mockClientProperties);
+        injectPropertiesIntoRedis(getBasicProperties());
 
         String url = String.format("http://localhost:%d/application/%s/master", port, profiles);
 
@@ -105,6 +55,17 @@ public class RedisEnvironmentRepositoryTest_PropertySources extends BaseRedisEnv
         assertThat(env.getPropertySources(), hasItem(matchingPropertySource(devPropertySource())));
         assertThat(env.getPropertySources(), hasItem(matchingPropertySource(mockDbPropertySource())));
         assertThat(env.getPropertySources(), hasItem(matchingPropertySource(mockClientPropertySource())));
+    }
+
+    private Map<String, String> getBasicProperties() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("application:dev:master:format:date", "dd/MM/yyyy");
+        properties.put("application:dev:master:db:url", "http://localhost:3306/my-db");
+        properties.put("application:mock-db:master:db:url", "http://localhost:3306/my-mock-db");
+        properties.put("application:mock-db:master:db:username", "my-user");
+        properties.put("application:mock-db:master:db:password", "my-password");
+        properties.put("application:mock-client:master:server:url", "http://localhost:8080/my-rest-service");
+        return properties;
     }
 
     private PropertySource devPropertySource() {
