@@ -1,5 +1,6 @@
 package com.github.gabrielruiu.spring.cloud.config.redis;
 
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
@@ -9,6 +10,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Gabriel Mihai Ruiu (gabriel.ruiu@mail.com)
@@ -25,6 +27,12 @@ public abstract class BaseRedisEnvironmentRepositoryTest {
 
     @Autowired
     TestRestTemplate testRestTemplate;
+
+    @Before
+    public void cleanUpRedis() {
+        Set<String> keys = stringRedisTemplate.keys("*");
+        stringRedisTemplate.delete(keys);
+    }
 
     protected void injectPropertiesIntoRedis(Map<String, String> properties) {
         for (Map.Entry<String, String> propertyEntry : properties.entrySet()) {
