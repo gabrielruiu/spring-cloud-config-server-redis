@@ -1,40 +1,26 @@
 package com.github.gabrielruiu.spring.cloud.config.redis;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.junit.Test;
 import org.springframework.cloud.config.environment.Environment;
 import org.springframework.cloud.config.environment.PropertySource;
-import org.springframework.data.redis.core.ValueOperations;
 
-import java.util.List;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 
 /**
  * @author Gabriel Mihai Ruiu (gabriel.ruiu@mail.com)
  */
 public class RedisEnvironmentRepositoryTest_Basic extends BaseRedisEnvironmentRepositoryTest {
 
-    private static final String KEY_BASE = "application:default:master:";
-    private static final String KEY_PATTERN = KEY_BASE + "*";
-    private static final String PROPERTY1 = KEY_BASE + "url";
-    private static final String PROPERTY2 = KEY_BASE + "format:date";
-    private static final String PROPERTY1_VALUE = "http://localhost:8080/url";
-    private static final String PROPERTY2_VALUE = "dd/MM/yyyy";
-
     @Test
     public void shouldRetrieveEnvironment() {
-        List<String> properties = Lists.newArrayList(PROPERTY1_VALUE, PROPERTY2_VALUE);
-        Set<String> keys = Sets.newHashSet(PROPERTY1, PROPERTY2);
-        ValueOperations<String, String> valueOps = mock(ValueOperations.class);
-        given(stringRedisTemplate.keys(KEY_PATTERN)).willReturn(keys);
-        given(stringRedisTemplate.opsForValue()).willReturn(valueOps);
-        given(valueOps.multiGet(keys)).willReturn(properties);
+        Map<String, String> properties = new HashMap<>();
+        properties.put("application:default:master:format:date", "dd/MM/yyyy");
+        properties.put("application:default:master:url", "http://localhost:8080/url");
+        injectPropertiesIntoRedis(properties);
         String url = String.format("http://localhost:%d/application/default/master", port);
 
         Environment env = testRestTemplate.getForObject(url, Environment.class);
@@ -49,7 +35,7 @@ public class RedisEnvironmentRepositoryTest_Basic extends BaseRedisEnvironmentRe
         assertThat(propertySource, notNullValue());
         assertThat(propertySource.getName(), is("application"));
         assertThat(propertySource.getSource(), notNullValue());
-        assertThat(propertySource.getSource(), hasEntry("format.date", PROPERTY2_VALUE));
-        assertThat(propertySource.getSource(), hasEntry("url", PROPERTY1_VALUE));
+        assertThat(propertySource.getSource(), hasEntry("format.date", "dd/MM/yyyy"));
+        assertThat(propertySource.getSource(), hasEntry("url", "http://localhost:8080/url"));
     }
 }
