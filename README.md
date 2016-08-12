@@ -89,5 +89,6 @@ which would return the following response:
 
 * There is no support for versioned properties, and therefore, all responses returned by the Redis config server
 will contain a ```null``` version.
+* There is no support for serving plain text files. See [Cloud Config documentation](http://cloud.spring.io/spring-cloud-config/spring-cloud-config.html#_serving_plain_text) for more info
 * As can be seen in the example above, the property-sources are profile specific
 
