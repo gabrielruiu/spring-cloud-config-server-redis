@@ -7,6 +7,7 @@ import org.springframework.cloud.config.environment.PropertySource;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceBuilder.aPropertySource;
 import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceMatcher.matchingPropertySource;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -39,6 +40,31 @@ public class RedisEnvironmentRepositoryTest_PropertySources extends BaseRedisEnv
     }
 
     @Test
+    public void shouldIncludePropertiesForDefaultProfile() {
+        String profiles = "dev";
+        Map<String, String> basicProperties = getBasicProperties();
+        basicProperties.putAll(applicationSpecificProperties());
+        injectPropertiesIntoRedis(basicProperties);
+        String url = String.format("http://localhost:%d/my-app/%s/master", port, profiles);
+        PropertySource defaultMyAppPropertySource = aPropertySource().withName("my-app").withProperty("format.date", "MM/dd/yyyy").build();
+        PropertySource devMyAppPropertySource = aPropertySource().withName("my-app-dev")
+                                                      .withProperty("format.date", "yyyy/MM/dd")
+                                                      .withProperty("url", "http://dev.api.rest:10000/rest").build();
+        PropertySource devApplicationPropertySource = aPropertySource().withName("application-dev")
+                                                      .withProperty("format.date", "dd/MM/yyyy")
+                                                      .withProperty("db.url", "http://localhost:3306/my-db").build();
+
+        Environment env = testRestTemplate.getForObject(url, Environment.class);
+
+        assertThat(env, notNullValue());
+        assertThat(env.getPropertySources(), notNullValue());
+        assertThat(env.getPropertySources(), hasSize(3));
+        assertThat(env.getPropertySources(), hasItem(matchingPropertySource(devApplicationPropertySource)));
+        assertThat(env.getPropertySources(), hasItem(matchingPropertySource(defaultMyAppPropertySource)));
+        assertThat(env.getPropertySources(), hasItem(matchingPropertySource(devMyAppPropertySource)));
+    }
+
+    @Test
     public void shouldReturnAPropertySourceForEachProfile() {
         String profiles = "dev,mock-db,mock-client";
         injectPropertiesIntoRedis(getBasicProperties());
@@ -66,6 +92,14 @@ public class RedisEnvironmentRepositoryTest_PropertySources extends BaseRedisEnv
         properties.put("application:mock-db:master:db:password", "my-password");
         properties.put("application:mock-client:master:server:url", "http://localhost:8080/my-rest-service");
         return properties;
+    }
+
+    private Map<String, String> applicationSpecificProperties() {
+        Map<String, String> appSpecificProperties = new HashMap<>();
+        appSpecificProperties.put("my-app:default:master:format:date", "MM/dd/yyyy");
+        appSpecificProperties.put("my-app:dev:master:format:date", "yyyy/MM/dd");
+        appSpecificProperties.put("my-app:dev:master:url", "http://dev.api.rest:10000/rest");
+        return appSpecificProperties;
     }
 
     private PropertySource devPropertySource() {
