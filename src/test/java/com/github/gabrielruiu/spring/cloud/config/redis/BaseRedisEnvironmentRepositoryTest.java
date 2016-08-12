@@ -35,8 +35,6 @@ public abstract class BaseRedisEnvironmentRepositoryTest {
     }
 
     protected void injectPropertiesIntoRedis(Map<String, String> properties) {
-        for (Map.Entry<String, String> propertyEntry : properties.entrySet()) {
-            stringRedisTemplate.opsForValue().set(propertyEntry.getKey(), propertyEntry.getValue());
-        }
+        stringRedisTemplate.opsForValue().multiSet(properties);
     }
 }
