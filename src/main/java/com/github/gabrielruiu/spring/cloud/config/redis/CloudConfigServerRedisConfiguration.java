@@ -6,7 +6,6 @@ import org.springframework.cloud.config.server.config.ConfigServerProperties;
 import org.springframework.cloud.config.server.environment.SearchPathLocator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 /**
@@ -21,9 +20,6 @@ public class CloudConfigServerRedisConfiguration {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-
-    @Autowired
-    private ConfigurableEnvironment environment;
 
     @Bean
     //TODO: Replace with actual implementation
