@@ -49,4 +49,11 @@ public class PropertySourceBuilder {
         appSpecificProperties.put("my-app:dev:master:url", "http://dev.api.rest:10000/rest");
         return appSpecificProperties;
     }
+
+    public static PropertySource devPropertySource() {
+        Map<String, String> devPropertyMap = new HashMap<>();
+        devPropertyMap.put("db.url", "http://localhost:3306/my-db");
+        devPropertyMap.put("format.date", "dd/MM/yyyy");
+        return new PropertySource("application-dev", devPropertyMap);
+    }
 }

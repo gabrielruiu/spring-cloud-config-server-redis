@@ -7,8 +7,7 @@ import org.springframework.cloud.config.environment.PropertySource;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceBuilder.aPropertySource;
-import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceBuilder.getBasicProperties;
+import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceBuilder.*;
 import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceMatcher.matchingPropertySource;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -82,13 +81,6 @@ public class RedisEnvironmentRepositoryTest_PropertySources extends BaseRedisEnv
         assertThat(env.getPropertySources(), hasItem(matchingPropertySource(devPropertySource())));
         assertThat(env.getPropertySources(), hasItem(matchingPropertySource(mockDbPropertySource())));
         assertThat(env.getPropertySources(), hasItem(matchingPropertySource(mockClientPropertySource())));
-    }
-
-    private PropertySource devPropertySource() {
-        Map<String, String> devPropertyMap = new HashMap<>();
-        devPropertyMap.put("db.url", "http://localhost:3306/my-db");
-        devPropertyMap.put("format.date", "dd/MM/yyyy");
-        return new PropertySource("application-dev", devPropertyMap);
     }
 
     private PropertySource mockDbPropertySource() {
