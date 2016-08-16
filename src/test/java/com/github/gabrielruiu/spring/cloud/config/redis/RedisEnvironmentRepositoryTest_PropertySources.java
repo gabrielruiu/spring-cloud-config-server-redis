@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceBuilder.aPropertySource;
+import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceBuilder.getBasicProperties;
 import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceMatcher.matchingPropertySource;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -81,17 +82,6 @@ public class RedisEnvironmentRepositoryTest_PropertySources extends BaseRedisEnv
         assertThat(env.getPropertySources(), hasItem(matchingPropertySource(devPropertySource())));
         assertThat(env.getPropertySources(), hasItem(matchingPropertySource(mockDbPropertySource())));
         assertThat(env.getPropertySources(), hasItem(matchingPropertySource(mockClientPropertySource())));
-    }
-
-    private Map<String, String> getBasicProperties() {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("application:dev:master:format:date", "dd/MM/yyyy");
-        properties.put("application:dev:master:db:url", "http://localhost:3306/my-db");
-        properties.put("application:mock-db:master:db:url", "http://localhost:3306/my-mock-db");
-        properties.put("application:mock-db:master:db:username", "my-user");
-        properties.put("application:mock-db:master:db:password", "my-password");
-        properties.put("application:mock-client:master:server:url", "http://localhost:8080/my-rest-service");
-        return properties;
     }
 
     private Map<String, String> applicationSpecificProperties() {

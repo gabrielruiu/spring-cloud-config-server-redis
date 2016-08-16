@@ -30,4 +30,15 @@ public class PropertySourceBuilder {
     public PropertySource build() {
         return new PropertySource(name, propertyMap);
     }
+
+    public static Map<String, String> getBasicProperties() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("application:dev:master:format:date", "dd/MM/yyyy");
+        properties.put("application:dev:master:db:url", "http://localhost:3306/my-db");
+        properties.put("application:mock-db:master:db:url", "http://localhost:3306/my-mock-db");
+        properties.put("application:mock-db:master:db:username", "my-user");
+        properties.put("application:mock-db:master:db:password", "my-password");
+        properties.put("application:mock-client:master:server:url", "http://localhost:8080/my-rest-service");
+        return properties;
+    }
 }
