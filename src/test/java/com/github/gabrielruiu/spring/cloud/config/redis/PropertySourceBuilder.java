@@ -56,4 +56,12 @@ public class PropertySourceBuilder {
         devPropertyMap.put("format.date", "dd/MM/yyyy");
         return new PropertySource("application-dev", devPropertyMap);
     }
+
+    public static PropertySource mockDbPropertySource() {
+        Map<String, String> mockDbPropertyMap = new HashMap<>();
+        mockDbPropertyMap.put("db.url", "http://localhost:3306/my-mock-db");
+        mockDbPropertyMap.put("db.username", "my-user");
+        mockDbPropertyMap.put("db.password", "my-password");
+        return new PropertySource("application-mock-db", mockDbPropertyMap);
+    }
 }

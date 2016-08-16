@@ -83,14 +83,6 @@ public class RedisEnvironmentRepositoryTest_PropertySources extends BaseRedisEnv
         assertThat(env.getPropertySources(), hasItem(matchingPropertySource(mockClientPropertySource())));
     }
 
-    private PropertySource mockDbPropertySource() {
-        Map<String, String> mockDbPropertyMap = new HashMap<>();
-        mockDbPropertyMap.put("db.url", "http://localhost:3306/my-mock-db");
-        mockDbPropertyMap.put("db.username", "my-user");
-        mockDbPropertyMap.put("db.password", "my-password");
-        return new PropertySource("application-mock-db", mockDbPropertyMap);
-    }
-
     private PropertySource mockClientPropertySource() {
         Map<String, String> mockClientPropertyMap = new HashMap<>();
         mockClientPropertyMap.put("server.url", "http://localhost:8080/my-rest-service");
