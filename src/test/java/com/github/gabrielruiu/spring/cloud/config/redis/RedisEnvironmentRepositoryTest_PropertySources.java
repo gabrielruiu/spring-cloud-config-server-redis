@@ -44,7 +44,7 @@ public class RedisEnvironmentRepositoryTest_PropertySources extends BaseRedisEnv
     public void shouldIncludePropertiesForDefaultProfile() {
         String profiles = "dev";
         Map<String, String> basicProperties = getBasicProperties();
-        basicProperties.putAll(applicationSpecificProperties());
+        basicProperties.putAll(PropertySourceBuilder.applicationSpecificProperties());
         injectPropertiesIntoRedis(basicProperties);
         String url = String.format("http://localhost:%d/my-app/%s/master", port, profiles);
         PropertySource defaultMyAppPropertySource = aPropertySource().withName("my-app").withProperty("format.date", "MM/dd/yyyy").build();
@@ -82,14 +82,6 @@ public class RedisEnvironmentRepositoryTest_PropertySources extends BaseRedisEnv
         assertThat(env.getPropertySources(), hasItem(matchingPropertySource(devPropertySource())));
         assertThat(env.getPropertySources(), hasItem(matchingPropertySource(mockDbPropertySource())));
         assertThat(env.getPropertySources(), hasItem(matchingPropertySource(mockClientPropertySource())));
-    }
-
-    private Map<String, String> applicationSpecificProperties() {
-        Map<String, String> appSpecificProperties = new HashMap<>();
-        appSpecificProperties.put("my-app:default:master:format:date", "MM/dd/yyyy");
-        appSpecificProperties.put("my-app:dev:master:format:date", "yyyy/MM/dd");
-        appSpecificProperties.put("my-app:dev:master:url", "http://dev.api.rest:10000/rest");
-        return appSpecificProperties;
     }
 
     private PropertySource devPropertySource() {

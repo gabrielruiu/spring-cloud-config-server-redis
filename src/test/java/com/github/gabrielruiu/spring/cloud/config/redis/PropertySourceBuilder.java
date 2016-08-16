@@ -41,4 +41,12 @@ public class PropertySourceBuilder {
         properties.put("application:mock-client:master:server:url", "http://localhost:8080/my-rest-service");
         return properties;
     }
+
+    public static Map<String, String> applicationSpecificProperties() {
+        Map<String, String> appSpecificProperties = new HashMap<>();
+        appSpecificProperties.put("my-app:default:master:format:date", "MM/dd/yyyy");
+        appSpecificProperties.put("my-app:dev:master:format:date", "yyyy/MM/dd");
+        appSpecificProperties.put("my-app:dev:master:url", "http://dev.api.rest:10000/rest");
+        return appSpecificProperties;
+    }
 }
