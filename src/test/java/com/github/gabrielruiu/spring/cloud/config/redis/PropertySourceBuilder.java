@@ -64,4 +64,10 @@ public class PropertySourceBuilder {
         mockDbPropertyMap.put("db.password", "my-password");
         return new PropertySource("application-mock-db", mockDbPropertyMap);
     }
+
+    public static PropertySource mockClientPropertySource() {
+        Map<String, String> mockClientPropertyMap = new HashMap<>();
+        mockClientPropertyMap.put("server.url", "http://localhost:8080/my-rest-service");
+        return new PropertySource("application-mock-client", mockClientPropertyMap);
+    }
 }
