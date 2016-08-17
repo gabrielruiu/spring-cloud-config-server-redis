@@ -21,8 +21,10 @@ public class CloudConfigServerRedisConfiguration {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    /**
+     * As mentioned in the documentation, there is no support for serving plain text files
+     */
     @Bean
-    //TODO: Replace with actual implementation
     public SearchPathLocator searchPathLocator() {
         return new SearchPathLocator() {
             @Override
