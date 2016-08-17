@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.springframework.cloud.config.environment.Environment;
 import org.springframework.cloud.config.environment.PropertySource;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceBuilder.*;
@@ -81,11 +80,5 @@ public class RedisEnvironmentRepositoryTest_PropertySources extends BaseRedisEnv
         assertThat(env.getPropertySources(), hasItem(matchingPropertySource(devPropertySource())));
         assertThat(env.getPropertySources(), hasItem(matchingPropertySource(mockDbPropertySource())));
         assertThat(env.getPropertySources(), hasItem(matchingPropertySource(mockClientPropertySource())));
-    }
-
-    private PropertySource globalApplicationPropertySource() {
-        Map<String, String> devPropertyMap = new HashMap<>();
-        devPropertyMap.put("format.date", "yyyy/MM/dd");
-        return new PropertySource("application", devPropertyMap);
     }
 }

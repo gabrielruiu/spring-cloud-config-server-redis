@@ -70,4 +70,10 @@ public class PropertySourceBuilder {
         mockClientPropertyMap.put("server.url", "http://localhost:8080/my-rest-service");
         return new PropertySource("application-mock-client", mockClientPropertyMap);
     }
+
+    public static PropertySource globalApplicationPropertySource() {
+        Map<String, String> devPropertyMap = new HashMap<>();
+        devPropertyMap.put("format.date", "yyyy/MM/dd");
+        return new PropertySource("application", devPropertyMap);
+    }
 }
