@@ -6,10 +6,19 @@ import org.springframework.cloud.config.environment.PropertySource;
 
 import java.util.Map;
 
-import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceBuilder.*;
+import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceBuilder.aPropertySource;
+import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceBuilder.devPropertySource;
+import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceBuilder.getBasicProperties;
+import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceBuilder.globalApplicationPropertySource;
+import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceBuilder.mockClientPropertySource;
+import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceBuilder.mockDbPropertySource;
 import static com.github.gabrielruiu.spring.cloud.config.redis.PropertySourceMatcher.matchingPropertySource;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.arrayWithSize;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
 
 /**
  * @author Gabriel Mihai Ruiu (gabriel.ruiu@mail.com)
